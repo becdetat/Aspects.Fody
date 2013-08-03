@@ -1,4 +1,4 @@
-Fody.Aspects
+Aspects.Fody
 ============
 
 Aspect oriented coding using Fody
