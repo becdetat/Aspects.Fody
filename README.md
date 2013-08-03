@@ -8,13 +8,14 @@ There is a good chance that this project will fail. I'm learning about AOP using
 
 ## todo
 
-- Method boundary aspect
-	- OnEntry cut point - *in progress*
-	- OnSuccess cut point
-	- OnException cut point
-	- OnExit cut point
+### Method boundary aspect
 
-```	OnEntry();
+- OnEntry cut point - *in progress*
+- OnSuccess cut point
+- OnException cut point
+- OnExit cut point
+
+	OnEntry();
 	try {
 		Method();
 		OnSuccess();
@@ -24,27 +25,33 @@ There is a good chance that this project will fail. I'm learning about AOP using
 		OnExit();
 	}
 
-- Property boundary aspect
-	- OnGetEntry
-	- OnGetSuccess
-	- OnGetException
-	- OnGetExit
-	- OnSetEntry
-	- OnSetSuccess
-	- OnSetException
-	- OnSetExit
 
-- Event boundary aspect
-	- OnAddHandler
-	- OnRemoveHandler
-	- OnRaiseHandlerEntry
-	- OnRaiseHandlerSuccess
-	- OnRaiseHandlerException
-	- OnRaiseHandlerExit
+### Property boundary aspect
 
-- Declarative configuration via an `IAspectsModule`, rather than the decorator approach:
+- OnGetEntry
+- OnGetSuccess
+- OnGetException
+- OnGetExit
+- OnSetEntry
+- OnSetSuccess
+- OnSetException
+- OnSetExit
 
-```	public class MyAspectsModule : IAspectsModule {
+### Event boundary aspect
+
+- OnAddHandler
+- OnRemoveHandler
+- OnRaiseHandlerEntry
+- OnRaiseHandlerSuccess
+- OnRaiseHandlerException
+- OnRaiseHandlerExit
+
+
+### Declarative configuration
+
+Declarative configuration via an `IAspectsModule`, rather than the decorator approach:
+
+	public class MyAspectsModule : IAspectsModule {
 		public void Configure(IAspectsModuleContainer container, ModuleDefinition moduleDefinition) {
 			var saveMethods = from type in moduleDefinition.Types
 							  from method in type.Methods
