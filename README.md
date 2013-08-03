@@ -15,6 +15,8 @@ There is a good chance that this project will fail. I'm learning about AOP using
 - OnException cut point
 - OnExit cut point
 
+Pseudo-code:
+
 	OnEntry();
 	try {
 		Method();
