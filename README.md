@@ -14,7 +14,7 @@ There is a good chance that this project will fail. I'm learning about AOP using
 	- OnException cut point
 	- OnExit cut point
 
-	OnEntry();
+```	OnEntry();
 	try {
 		Method();
 		OnSuccess();
@@ -44,7 +44,7 @@ There is a good chance that this project will fail. I'm learning about AOP using
 
 - Declarative configuration via an `IAspectsModule`, rather than the decorator approach:
 
-	public class MyAspectsModule : IAspectsModule {
+```	public class MyAspectsModule : IAspectsModule {
 		public void Configure(IAspectsModuleContainer container, ModuleDefinition moduleDefinition) {
 			var saveMethods = from type in moduleDefinition.Types
 							  from method in type.Methods
