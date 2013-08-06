@@ -1,6 +1,6 @@
 ﻿using Mono.Cecil;
 
-namespace Tests
+namespace AspectsTests
 {
     public static class ModuleDefinitionHelper
     {

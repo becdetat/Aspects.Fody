@@ -5,7 +5,7 @@ using Mono.Cecil;
 using NUnit.Framework;
 using Shouldly;
 
-namespace Tests.ServiceTests.FindDecoratedMethodsServiceTests
+namespace AspectsTests.ServiceTests.FindDecoratedMethodsServiceTests
 {
     [TestFixture]
     public class when_finding_a_decorated_method : ConcernFor<FindDecoratedMethodsService>
@@ -34,15 +34,15 @@ namespace Tests.ServiceTests.FindDecoratedMethodsServiceTests
         }
 
         [Test]
-        public void There_should_be_one()
+        public void It_should_be_the_test_method()
         {
-            _methods.Length.ShouldBe(1);
+            _methods[0].Item1.FullName.ShouldBe("System.Void " + GetType().FullName + "::Test()");
         }
 
         [Test]
-        public void It_should_be_the_test_method()
+        public void There_should_be_one()
         {
-            _methods[0].Item1.FullName.ShouldBe("System.Void " + this.GetType().FullName + "::Test()");
+            _methods.Length.ShouldBe(1);
         }
     }
 }

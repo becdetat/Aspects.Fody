@@ -1,19 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Aspects.Fody.Services;
 using Mono.Cecil;
 using NUnit.Framework;
 using Shouldly;
 
-namespace Tests.ServiceTests.FindDecoratedMethodsServiceTests
+namespace AspectsTests.ServiceTests.FindDecoratedMethodsServiceTests
 {
     [TestFixture]
     public class When_finding_a_subclassed_decorator : ConcernFor<FindDecoratedMethodsService>
     {
-        private Tuple<MethodDefinition,CustomAttribute>[] _methods;
+        private Tuple<MethodDefinition, CustomAttribute>[] _methods;
 
         public class ParentAttribute : Attribute
         {
@@ -41,15 +38,15 @@ namespace Tests.ServiceTests.FindDecoratedMethodsServiceTests
         }
 
         [Test]
-        public void There_shoudl_be_one()
+        public void It_should_be_the_tes_tmethod()
         {
-            _methods.Length.ShouldBe(1);
+            _methods[0].Item1.FullName.ShouldBe("System.Void " + GetType().FullName + "::Test()");
         }
 
         [Test]
-        public void It_should_be_the_tes_tmethod()
+        public void There_shoudl_be_one()
         {
-            _methods[0].Item1.FullName.ShouldBe("System.Void " + this.GetType().FullName + "::Test()");
+            _methods.Length.ShouldBe(1);
         }
     }
 }

@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{9D9D2FC1-043A-497B-986D-20812500A006}</ProjectGuid>
+    <ProjectGuid>{57EB3574-38E0-4C96-B6F8-AFC78F11F616}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Weavers</RootNamespace>
-    <AssemblyName>Weavers</AssemblyName>
+    <RootNamespace>Aspects.Fody</RootNamespace>
+    <AssemblyName>Aspects.Fody</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -33,15 +33,6 @@
     <Reference Include="Mono.Cecil">
       <HintPath>..\..\packages\Mono.Cecil.0.9.5.4\lib\net40\Mono.Cecil.dll</HintPath>
     </Reference>
-    <Reference Include="Mono.Cecil.Mdb">
-      <HintPath>..\..\packages\Mono.Cecil.0.9.5.4\lib\net40\Mono.Cecil.Mdb.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.Cecil.Pdb">
-      <HintPath>..\..\packages\Mono.Cecil.0.9.5.4\lib\net40\Mono.Cecil.Pdb.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.Cecil.Rocks">
-      <HintPath>..\..\packages\Mono.Cecil.0.9.5.4\lib\net40\Mono.Cecil.Rocks.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -51,15 +42,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Aspects.Fody\Extensions\ILProcessorExtensions.cs" />
-    <Compile Include="Aspects.Fody\Extensions\TypeReferenceExtensions.cs" />
-    <Compile Include="Aspects.Fody\MethodBoundaryAspect.cs" />
-    <Compile Include="Aspects.Fody\Services\FindDecoratedMethodsService.cs" />
+    <Compile Include="Extensions\ILProcessorExtensions.cs" />
+    <Compile Include="Extensions\TypeReferenceExtensions.cs" />
+    <Compile Include="MethodBoundaryAspect.cs" />
     <Compile Include="ModuleWeaver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
+    <Compile Include="Services\FindDecoratedMethodsService.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

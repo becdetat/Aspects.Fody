@@ -1,17 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using Aspects.Fody;
-using Aspects.Fody.Extensions;
 using Aspects.Fody.Services;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
+using Aspects.Fody.Extensions;
 
-namespace Weavers
+namespace Aspects.Fody
 {
     public class ModuleWeaver
     {
@@ -32,13 +28,16 @@ namespace Weavers
 
             LogWarning("Aspects.Fody.ModuleWeaver.Execute");
 
-            var methods = _findDecoratedMethodsService.FindDecoratedMethods<MethodBoundaryAspect>();
+            var methods = _findDecoratedMethodsService
+                .FindDecoratedMethods<MethodBoundaryAspect>()
+                .ToArray()
+                ;
 
             LogWarning("Found " + methods.Count().ToString());
 
             foreach (var method in methods)
             {
-                //Decorate(method.Item1, method.Item2);
+                Decorate(method.Item1, method.Item2);
             }
         }
 
@@ -92,7 +91,5 @@ namespace Weavers
 
             return ModuleDefinition.Import(methodDefinition);
         }
-
-
     }
 }

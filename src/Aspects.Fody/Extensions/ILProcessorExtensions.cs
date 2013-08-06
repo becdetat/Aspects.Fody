@@ -14,7 +14,7 @@ namespace Aspects.Fody.Extensions
         {
             foreach (var instruction in instructions)
             {
-                processor.InsertBefore(target, instructions);
+                processor.InsertBefore(target, instruction);
             }
         }
     }
