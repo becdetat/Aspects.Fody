@@ -41,41 +41,52 @@ namespace Aspects.Fody
             }
         }
 
-        private void Decorate(MethodDefinition method, CustomAttribute attribute)
+        private void Decorate(MethodDefinition method, CustomAttribute aspectAttribute)
         {
-            var beforeExecutionMethodReference = GetMethodReference(attribute.AttributeType, md => md.Name == "BeforeExecution");
-
             var processor = method.Body.GetILProcessor();
             var firstInstruction = method.IsConstructor
                                        ? method.Body.Instructions.First(i => i.OpCode == OpCodes.Call).Next
                                        : method.Body.Instructions.First();
 
-            var methodBaseTypeRef = ModuleDefinition.Import(typeof (MethodBase));
-
-            var attributeVariableDefinition = AddVariableDefinition(method, "__fody$attribute", attribute.AttributeType);
-            var methodVariableDefinition = AddVariableDefinition(method, "__fody$method", methodBaseTypeRef);
-
-            var beforeExecutionInstructions = GetBeforeExecutionInstructions(processor, attributeVariableDefinition, methodVariableDefinition, beforeExecutionMethodReference);
+            // MethodBoundaryAspectImplementation __fody$aspect;
+            // >>>> .locals init (
+            // >>>>   [0] class MethodBoundaryAspectImplementation __fody$aspect
+            // >>>> )
+            var aspectVariableDefinition = new VariableDefinition("__fody$aspect", aspectAttribute.AttributeType);
+            method.Body.Variables.Add(aspectVariableDefinition);
+            processor.InsertBefore(firstInstruction, processor.Create(OpCodes.Ldloc_S, aspectVariableDefinition));
             
-            processor.InsertBefore(firstInstruction, beforeExecutionInstructions);
-        }
-        
-        private static VariableDefinition AddVariableDefinition(MethodDefinition method, string variableName, TypeReference variableType)
-        {
-            var variableDefinition = new VariableDefinition(variableName, variableType);
-            method.Body.Variables.Add(variableDefinition);
-            return variableDefinition;
-        }
+            // __fody$aspect = new MethodBoundaryAspectImplementation();
+            // >>>> newobj instance void MethodBoundaryAspectImplementation::.ctor()
+            processor.InsertBefore(firstInstruction, processor.Create(OpCodes.Newobj, aspectAttribute.Constructor));
+            // >>>> stloc.0
+            processor.InsertBefore(firstInstruction, processor.Create(OpCodes.Stloc_0));
+            // >>>> ldloc.0
+            processor.InsertBefore(firstInstruction, processor.Create(OpCodes.Ldloc_0));
 
-        private static IEnumerable<Instruction> GetBeforeExecutionInstructions(ILProcessor processor, VariableDefinition attributeVariableDefinition, VariableDefinition methodVariableDefinition, MethodReference beforeExecutionMethodReference)
-        {
-            // Call __fody$attribute.BeforeExecution("{methodName}")
-            return new List<Instruction>
-                   {
-                       processor.Create(OpCodes.Ldloc_S, attributeVariableDefinition),
-                       processor.Create(OpCodes.Ldloc_S, methodVariableDefinition),
-                       processor.Create(OpCodes.Callvirt, beforeExecutionMethodReference)
-                   };
+            // __fody$aspect.OnEntry();
+            // >>>> callvirt instance void MethodBoundaryAspectImplementation::OnEntry()
+            processor.InsertBefore(firstInstruction, processor.Create(OpCodes.Callvirt, GetMethodReference(aspectAttribute.AttributeType, x => x.Name == "OnEntry")));
+            
+            // try {
+            // >>>> .try {
+            //   >>>> .try {
+            // **** This causes a NRE in cecil, going to have to mess around with this a bit.
+            // See:
+            // http://stackoverflow.com/questions/11074518/add-a-try-catch-with-mono-cecil/11074910#11074910
+            // http://stackoverflow.com/questions/12769699/mono-cecil-injecting-try-finally
+            //method.Body.ExceptionHandlers.Add(new ExceptionHandler(ExceptionHandlerType.Catch)
+            //    {
+            //        TryStart = firstInstruction
+            //    });
+
+            //   **PAYLOAD**
+            //   __fody$aspect.OnSuccess();
+            // } catch (Exception ex) {
+            //   __fody$aspect.OnException();
+            // } finally {
+            //   __fody$aspect.OnExit();
+            // }
         }
 
         public MethodReference GetMethodReference(TypeReference typeReference, Func<MethodDefinition, bool> predicate)

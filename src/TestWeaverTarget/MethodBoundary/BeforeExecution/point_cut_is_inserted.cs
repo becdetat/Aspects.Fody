@@ -1,24 +1,53 @@
-﻿using Aspects.Fody;
+﻿using System;
+using Aspects.Fody;
 
 namespace TestWeaverTarget.MethodBoundary.BeforeExecution.point_cut_is_inserted
 {
     public class SubjectClass
     {
-        public static bool BeforeExecutionPointCutExecuted;
+        public static bool OnEntryPointCutExecuted;
         public bool SubjectMethodExecuted;
 
-        [SubjectBeforeExecutionAspect]
+        [SubjectOnEntryAspect]
         public void SubjectMethod()
         {
             SubjectMethodExecuted = true;
         }
     }
 
-    public class SubjectBeforeExecutionAspect : MethodBoundaryAspect
+    public class SubjectOnEntryAspect : MethodBoundaryAspect
     {
-        public override void BeforeExecution()
+        public override void OnEntry()
         {
-            SubjectClass.BeforeExecutionPointCutExecuted = true;
+            SubjectClass.OnEntryPointCutExecuted = true;
+        }
+    }
+
+    public class Example
+    {
+        public void SubjectMethod()
+        {
+            var aspect = new SubjectOnEntryAspect();
+            aspect.OnEntry();
+            try
+            {
+                Payload();
+                aspect.OnSuccess();
+            }
+            catch (Exception)
+            {
+                aspect.OnException();
+                throw;
+            }
+            finally
+            {
+                aspect.OnExit();
+            }
+        }
+
+        void Payload()
+        {
+            Console.WriteLine("Payload");
         }
     }
 }
