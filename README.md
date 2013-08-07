@@ -3,17 +3,17 @@ Aspects.Fody
 
 Aspect oriented coding using Fody
 
-There is a good chance that this project will fail. I'm learning about AOP using PostSharp at the moment and wanted to see how difficult it would be to do something similar in Fody.
+There is a good chance that this project will fail. I learned a little about AOP using PostSharp and wanted to see how difficult it would be to do something similar in Fody.
 
 
 ## todo
 
 ### Method boundary aspect
 
-- OnEntry cut point - *in progress*
-- OnSuccess cut point
-- OnException cut point
-- OnExit cut point
+- OnEntry - *complete*
+- OnSuccess
+- OnException
+- OnExit
 
 Pseudo-code:
 
