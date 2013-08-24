@@ -82,17 +82,9 @@ namespace Aspects.Fody
 
             //   **PAYLOAD**
 
-            //   __fody$aspect.OnSuccess();
-            // nop
-            processor.InsertAfter(GetLastInstruction(method), processor.Create(OpCodes.Nop));
-            // ldloc.0
-            processor.InsertAfter(GetLastInstruction(method), processor.Create(OpCodes.Ldloc_0));
-            // callvirt instance void [Aspects.Fody]Aspects.Fode.MethodBoundaryAspect::OnSuccess()
-            processor.InsertAfter(GetLastInstruction(method), processor.Create(OpCodes.Callvirt, GetMethodReference(aspectAttribute.AttributeType, x => x.Name == "OnSuccess")));
-            // nop
-            processor.InsertAfter(GetLastInstruction(method), processor.Create(OpCodes.Nop));
-            // nop
-            processor.InsertAfter(GetLastInstruction(method), processor.Create(OpCodes.Nop));
+            processor.InsertAfter(
+                GetLastInstruction(method), 
+                processor.BuildMethodCall(GetMethodReference(aspectAttribute.AttributeType, x => x.Name == "OnSuccess")));
 
             // } catch (Exception ex) {
             //   __fody$aspect.OnException();
@@ -100,6 +92,9 @@ namespace Aspects.Fody
             //   __fody$aspect.OnExit();
             // }
         }
+
+        
+
 
         private static Instruction GetLastInstruction(MethodDefinition method)
         {
