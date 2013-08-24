@@ -1,26 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Aspects.Fody.Extensions;
 using Mono.Cecil;
 
-namespace Aspects.Fody.Services
+namespace Aspects.Fody.Extensions
 {
-    public class FindDecoratedMethodsService
+    public static class ModuleDefinitionExtensions
     {
-        private readonly ModuleDefinition _moduleDefinition;
-
-        public FindDecoratedMethodsService(ModuleDefinition moduleDefinition)
-        {
-            _moduleDefinition = moduleDefinition;
-        }
-
-        public IEnumerable<Tuple<MethodDefinition, CustomAttribute>> FindDecoratedMethods<T>()
+        public static IEnumerable<Tuple<MethodDefinition, CustomAttribute>> FindDecoratedMethods<T>(this ModuleDefinition moduleDefinition)
         {
             var decoratorFullName = typeof (T).FullName
                 .Replace('+', '/');
 
-            return from type in _moduleDefinition.Types
+            return from type in moduleDefinition.Types
                    from method in type.Methods
                    from attribute in method.CustomAttributes
                    where attribute.Constructor.DeclaringType.DerivesFrom(decoratorFullName)

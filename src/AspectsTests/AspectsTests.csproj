@@ -53,8 +53,8 @@
     <Compile Include="ConcernFor.cs" />
     <Compile Include="ModuleDefinitionHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ServiceTests\FindDecoratedMethodsServiceTests\when_finding_a_decorated_method.cs" />
-    <Compile Include="ServiceTests\FindDecoratedMethodsServiceTests\When_finding_a_subclassed_decorator.cs" />
+    <Compile Include="ExtensionsTests\ModuleDefinitionExtensionTests\when_finding_a_decorated_method.cs" />
+    <Compile Include="ExtensionsTests\ModuleDefinitionExtensionTests\When_finding_a_subclassed_decorator.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Aspects.Fody\Aspects.Fody.csproj">
