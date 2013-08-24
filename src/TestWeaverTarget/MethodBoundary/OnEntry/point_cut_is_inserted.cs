@@ -1,7 +1,7 @@
 ﻿using System;
 using Aspects.Fody;
 
-namespace TestWeaverTarget.MethodBoundary.BeforeExecution.point_cut_is_inserted
+namespace TestWeaverTarget.MethodBoundary.OnEntry.point_cut_is_inserted
 {
     public class SubjectClass
     {
