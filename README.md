@@ -14,6 +14,7 @@ There is a good chance that this project will fail. I learned a little about AOP
 - OnSuccess - *complete*
 - OnException
 - OnExit
+- Tests around methods that return values as currently all my tests are `void` calls
 
 Pseudo-code:
 
@@ -26,6 +27,9 @@ Pseudo-code:
 	} finally {
 		OnExit();
 	}
+
+### Pass meta-data to each point cut
+See PostSharp for guidance
 
 
 ### Property boundary aspect
@@ -54,7 +58,7 @@ Pseudo-code:
 Declarative configuration via an `IAspectsModule`, rather than the decorator approach:
 
 	public class MyAspectsModule : IAspectsModule {
-		public void Configure(IAspectsModuleContainer <col></col>ntainer, ModuleDefinition moduleDefinition) {
+		public void Configure(IAspectsModuleContainer container, ModuleDefinition moduleDefinition) {
 			var saveMethods = from type in moduleDefinition.Types
 							  from method in type.Methods
 							  where method.Name.StartsWith("Save")

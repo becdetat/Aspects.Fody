@@ -29,7 +29,7 @@ namespace AspectsTests.ServiceTests.FindDecoratedMethodsServiceTests
         }
 
         [Test]
-        public void It_should_be_the_tes_tmethod()
+        public void It_should_be_the_test_method()
         {
             Subject[0].Item1.FullName.ShouldBe("System.Void " + GetType().FullName + "::Test()");
         }

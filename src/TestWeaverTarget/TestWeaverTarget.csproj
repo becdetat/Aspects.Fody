@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MethodBoundary\OnEntry\point_cut_is_inserted.cs" />
+    <Compile Include="MethodBoundary\OnException\point_cut_is_inserted.cs" />
     <Compile Include="MethodBoundary\OnSuccess\point_cut_is_inserted.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

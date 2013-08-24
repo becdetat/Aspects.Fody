@@ -40,6 +40,9 @@ namespace Aspects.Fody
         private void Decorate(MethodDefinition method, CustomAttribute aspectAttribute)
         {
             var processor = method.Body.GetILProcessor();
+            FixReturns(method);
+
+
             var firstInstruction = GetFirstInstruction(method);
 
             // MethodBoundaryAspectImplementation __fody$aspect;
@@ -49,7 +52,7 @@ namespace Aspects.Fody
             var aspectVariableDefinition = new VariableDefinition("__fody$aspect", aspectAttribute.AttributeType);
             method.Body.Variables.Add(aspectVariableDefinition);
             processor.InsertBefore(firstInstruction, processor.Create(OpCodes.Ldloc_S, aspectVariableDefinition));
-            
+
             // __fody$aspect = new MethodBoundaryAspectImplementation();
             // >>>> newobj instance void MethodBoundaryAspectImplementation::.ctor()
             processor.InsertBefore(firstInstruction, processor.Create(OpCodes.Newobj, aspectAttribute.Constructor));
@@ -74,15 +77,60 @@ namespace Aspects.Fody
 
             //   **PAYLOAD**
 
+
+            // aspect.OnSuccess()
+            var onSuccessInstructions =
+                processor.BuildMethodCall(GetMethodReference(aspectAttribute.AttributeType, x => x.Name == "OnSuccess"))
+                         .ToArray()
+                ;
             processor.InsertAfter(
-                GetLastInstruction(method), 
-                processor.BuildMethodCall(GetMethodReference(aspectAttribute.AttributeType, x => x.Name == "OnSuccess")));
+                GetLastInstruction(method),
+                onSuccessInstructions);
+
+            // aspect.OnException()
+            var onExceptionInstructions =
+                processor.BuildMethodCall(GetMethodReference(aspectAttribute.AttributeType, x => x.Name == "OnException"))
+                         .ToArray()
+                ;
+            processor.InsertAfter(
+                method.Body.Instructions.Skip(method.Body.Instructions.Count - 1).FirstOrDefault(), 
+                onExceptionInstructions);
+            // Wrap a handler around { Payload(); aspect.OnSuccess(); }:
+            //var innerHandler = new ExceptionHandler(ExceptionHandlerType.Catch)
+            //{
+            //    TryStart = firstInstruction,
+            //    TryEnd = onSuccessInstructions.Last(),
+            //    HandlerStart = onExceptionInstructions.First(),
+            //    HandlerEnd = onExceptionInstructions.Last()
+            //};
+            //method.Body.ExceptionHandlers.Add(innerHandler);
 
             // } catch (Exception ex) {
             //   __fody$aspect.OnException();
             // } finally {
             //   __fody$aspect.OnExit();
             // }
+            
+        }
+
+        private void FixReturns(MethodDefinition method)
+        {
+            // TODO handle non-void method return types
+
+            var instructions = method.Body.Instructions;
+
+            if (method.ReturnType == ModuleDefinition.TypeSystem.Void)
+            {
+                var lastReturnInstruction = Instruction.Create(OpCodes.Ret);
+
+                foreach (var instruction in instructions.Where(x => x.OpCode == OpCodes.Ret))
+                {
+                    var index = instructions.IndexOf(instruction);
+                    instructions[index] = Instruction.Create(OpCodes.Leave, lastReturnInstruction);
+                }
+
+                instructions.Add(lastReturnInstruction);
+            }
         }
 
         private static Instruction GetFirstInstruction(MethodDefinition method)
@@ -95,7 +143,8 @@ namespace Aspects.Fody
 
         private static Instruction GetLastInstruction(MethodDefinition method)
         {
-            return method.Body.Instructions.Skip(method.Body.Instructions.Count - 2).FirstOrDefault();
+            //if (method.Body.Instructions.Last().OpCode == OpCodes.Ret) return method.Body.Instructions.Last();
+            return method.Body.Instructions.Skip(method.Body.Instructions.Count - 3).FirstOrDefault();
         }
 
         public MethodReference GetMethodReference(TypeReference typeReference, Func<MethodDefinition, bool> predicate)

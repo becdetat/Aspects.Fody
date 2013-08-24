@@ -54,6 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions\ILProcessorExtensions.cs" />
+    <Compile Include="Extensions\TypeExtensions.cs" />
     <Compile Include="Extensions\TypeReferenceExtensions.cs" />
     <Compile Include="MethodBoundaryAspect.cs" />
     <Compile Include="ModuleWeaver.cs" />
