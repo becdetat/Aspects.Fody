@@ -10,9 +10,9 @@ There is a good chance that this project will fail. I learned a little about AOP
 
 ### Method boundary aspect
 
-- OnEntry - *complete*
-- OnSuccess - *complete*
-- OnException
+- OnEntry - **complete**
+- OnSuccess - **complete**
+- OnException - *in progress*
 - OnExit
 - Tests around methods that return values as currently all my tests are `void` calls
 
