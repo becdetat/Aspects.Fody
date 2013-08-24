@@ -66,6 +66,13 @@ Declarative configuration via an `IAspectsModule`, rather than the decorator app
 	}
 
 
+## Building
+
+
+## License
+
+
+
 ## Credits
 
 Parts of Aspects.Fody are taken from or based on:
