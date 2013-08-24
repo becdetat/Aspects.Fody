@@ -11,7 +11,7 @@ namespace TestWeaverTargetTests
         public static Assembly WeaveAssembly()
         {
             string assemblyPath = GetAssemblyPath();
-            string newAssemblyPath = assemblyPath.Replace(".dll", "2.dll");
+            string newAssemblyPath = assemblyPath.Replace(".dll", string.Format("-{0}.dll", Guid.NewGuid()));
 
             if (File.Exists(newAssemblyPath)) File.Delete(newAssemblyPath);
 

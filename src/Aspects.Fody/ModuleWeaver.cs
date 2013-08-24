@@ -81,12 +81,31 @@ namespace Aspects.Fody
             //    });
 
             //   **PAYLOAD**
+
             //   __fody$aspect.OnSuccess();
+            // nop
+            processor.InsertAfter(GetLastInstruction(method), processor.Create(OpCodes.Nop));
+            // ldloc.0
+            processor.InsertAfter(GetLastInstruction(method), processor.Create(OpCodes.Ldloc_0));
+            // callvirt instance void [Aspects.Fody]Aspects.Fode.MethodBoundaryAspect::OnSuccess()
+            processor.InsertAfter(GetLastInstruction(method), processor.Create(OpCodes.Callvirt, GetMethodReference(aspectAttribute.AttributeType, x => x.Name == "OnSuccess")));
+            // nop
+            processor.InsertAfter(GetLastInstruction(method), processor.Create(OpCodes.Nop));
+            // nop
+            processor.InsertAfter(GetLastInstruction(method), processor.Create(OpCodes.Nop));
+
             // } catch (Exception ex) {
             //   __fody$aspect.OnException();
             // } finally {
             //   __fody$aspect.OnExit();
             // }
+        }
+
+        private static Instruction GetLastInstruction(MethodDefinition method)
+        {
+            return method.Body.Instructions.Skip(method.Body.Instructions.Count - 2).FirstOrDefault();
+            //var lastInstruction = method.Body.Instructions.Last();
+            //return lastInstruction;
         }
 
         public MethodReference GetMethodReference(TypeReference typeReference, Func<MethodDefinition, bool> predicate)

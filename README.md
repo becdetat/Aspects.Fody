@@ -11,7 +11,7 @@ There is a good chance that this project will fail. I learned a little about AOP
 ### Method boundary aspect
 
 - OnEntry - *complete*
-- OnSuccess
+- OnSuccess - *complete*
 - OnException
 - OnExit
 
@@ -121,8 +121,10 @@ Because I needed to drop it somewhere.
 
 
 
-## Building
+## Building and extending
 It should all build and tests should run (and hopefully pass). NuGet package restore is enabled. No gotchas at the moment. YMMV.
+
+[ILSpy](http://ilspy.net/) is your friend. Conviently located in `tools/ilspy`.
 
 
 ## License
